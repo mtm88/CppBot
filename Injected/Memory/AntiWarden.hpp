@@ -27,7 +27,7 @@ int SMSG_WARDEN_DATA_HandlerDetour(int a1, uint16 opcode, int a3, int pDataStore
 				//DRIVER_CHECK
 				VirtualProtect((void*)(wardenModule + 0x33D1), 1, 0x40, &oldPFlags);
 				*(byte*)(wardenModule + 0x33D1) = 0;
-				//PAGE_CHECK_A, PAGE_CHECK_B - not tested (added thanks to prospectinggemu)
+				//PAGE_CHECK_A, PAGE_CHECK_B - not tested (added thanks to prospectingemu)
 				VirtualProtect((void*)(wardenModule + 0x12AD), 1, 0x40, &oldPFlags);
 				*(byte*)(wardenModule + 0x12AD) = 0;
 
