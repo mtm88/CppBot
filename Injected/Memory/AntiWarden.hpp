@@ -18,12 +18,18 @@ int SMSG_WARDEN_DATA_HandlerDetour(int a1, uint16 opcode, int a3, int pDataStore
 			{
 				wardenModuleAddress = wardenModule;
 				
-				//bypass PAGE_CHECK_A, PAGE_CHECK_B, DRIVER_CHECK and MODULE_CHECK
+				//doesn't bypass LUA_STR_CHECK and MPQ_CHECK !
+				//--------------------------------------------
 				DWORD oldPFlags;
+				//MODULE_CHECK - tested
 				VirtualProtect((void*)(wardenModule + 0x309F), 1, 0x40, &oldPFlags);
 				*(byte*)(wardenModule + 0x309F) = 0xE9;
+				//DRIVER_CHECK
 				VirtualProtect((void*)(wardenModule + 0x33D1), 1, 0x40, &oldPFlags);
 				*(byte*)(wardenModule + 0x33D1) = 0;
+				//PAGE_CHECK_A, PAGE_CHECK_B - not tested
+				VirtualProtect((void*)(wardenModule + 0x12AD), 1, 0x40, &oldPFlags);
+				*(byte*)(wardenModule + 0x12AD) = 0;
 
 				auto det = g_Detours["WardenScanDetour"];
 				if (det != nullptr)
@@ -42,26 +48,26 @@ int SMSG_WARDEN_DATA_HandlerDetour(int a1, uint16 opcode, int a3, int pDataStore
 	return res;
 }
 
-int WardenScanDetour(int ptr, int address, int len)
+int WardenScanDetour(int buffer, int to_compare, int len)
 {
-	std::map<int, byte> orig_bytes{};
+	std::map<int, byte> old_bytes_map{};
 
 	for (auto& det : g_Detours)
 	{
 		for (int i = 0; i != 6; ++i)
 		{
-			orig_bytes[(int)(det.second->target_func) + i] = *(det.second->original_bytes + i);
+			old_bytes_map[(int)(det.second->target_func) + i] = *(det.second->original_bytes + i);
 		}
 	}
 	
 	for (int i = 0; i != len; ++i)
 	{
 		
-		if (orig_bytes.find(address + i) == orig_bytes.end()) 
-			*(byte*)(ptr + i) = *(byte*)(address + i);		
+		if (old_bytes_map.find(to_compare + i) == old_bytes_map.end()) 
+			*(byte*)(buffer + i) = *(byte*)(to_compare + i);		
 		else 
 			//bypass MEM_CHECK for detoured functions
-			*(byte*)(ptr + i) = orig_bytes[address + i];
+			*(byte*)(buffer + i) = old_bytes_map[to_compare + i];
 	}
 
 	return 0;
