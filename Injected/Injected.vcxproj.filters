@@ -1,0 +1,142 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="DllMain.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Util">
+      <UniqueIdentifier>{06d7a7db-d81d-4665-b59e-54372ce8aecf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Lua">
+      <UniqueIdentifier>{890ede05-7673-4239-88ff-0d1a2b96b8eb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Memory">
+      <UniqueIdentifier>{2927ea73-97c3-4227-af52-c9e34d9df475}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Objects">
+      <UniqueIdentifier>{58dbef1b-ecb8-41ae-8069-d493ad82b287}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Routines">
+      <UniqueIdentifier>{3768a6df-b06c-43f9-b3d5-c48ca1ee0297}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Routines\Paladin">
+      <UniqueIdentifier>{2d4a8971-18bc-4c94-a0e0-ee4676bb0b05}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="WowStuff">
+      <UniqueIdentifier>{c2184eff-e708-40a3-b030-e2d7d735e6b3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="CommonDetours">
+      <UniqueIdentifier>{0a15da47-dbb6-463b-a8fc-8871656f8c32}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Routines\Hunter">
+      <UniqueIdentifier>{fc7f2a1e-3aef-4d63-beaa-b0918b85f12f}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="OM.hpp" />
+    <ClInclude Include="Manager.hpp" />
+    <ClInclude Include="Graphics.hpp" />
+    <ClInclude Include="Objects\Aura.hpp">
+      <Filter>Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\Item.hpp">
+      <Filter>Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\DynamicObject.hpp">
+      <Filter>Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\Container.hpp">
+      <Filter>Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\Corpse.hpp">
+      <Filter>Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\GameObject.hpp">
+      <Filter>Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\Unit.hpp">
+      <Filter>Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\LocalPlayer.hpp">
+      <Filter>Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\Object.hpp">
+      <Filter>Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\Player.hpp">
+      <Filter>Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="WowStuff\WowFuncs.hpp">
+      <Filter>WowStuff</Filter>
+    </ClInclude>
+    <ClInclude Include="WowStuff\Camera.hpp">
+      <Filter>WowStuff</Filter>
+    </ClInclude>
+    <ClInclude Include="WowStuff\Location.hpp">
+      <Filter>WowStuff</Filter>
+    </ClInclude>
+    <ClInclude Include="WowStuff\Wowtypes.h">
+      <Filter>WowStuff</Filter>
+    </ClInclude>
+    <ClInclude Include="WowStuff\WowConsole.hpp">
+      <Filter>WowStuff</Filter>
+    </ClInclude>
+    <ClInclude Include="Util\Timer.hpp">
+      <Filter>Util</Filter>
+    </ClInclude>
+    <ClInclude Include="Util\WindowsConsole.hpp">
+      <Filter>Util</Filter>
+    </ClInclude>
+    <ClInclude Include="Util\Keyboardhook.hpp">
+      <Filter>Util</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\Spell.hpp">
+      <Filter>Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="WowStuff\SharedDefines.h">
+      <Filter>WowStuff</Filter>
+    </ClInclude>
+    <ClInclude Include="Lua\Lua.hpp">
+      <Filter>Lua</Filter>
+    </ClInclude>
+    <ClInclude Include="Memory\Detour.hpp">
+      <Filter>Memory</Filter>
+    </ClInclude>
+    <ClInclude Include="Routines\PaladinLeveling.hpp">
+      <Filter>Routines\Paladin</Filter>
+    </ClInclude>
+    <ClInclude Include="Routines\Common.hpp">
+      <Filter>Routines</Filter>
+    </ClInclude>
+    <ClInclude Include="WowStuff\Opcodes.h">
+      <Filter>WowStuff</Filter>
+    </ClInclude>
+    <ClInclude Include="DataStore.hpp">
+      <Filter>WowStuff</Filter>
+    </ClInclude>
+    <ClInclude Include="NetClientProcessDetour.hpp">
+      <Filter>CommonDetours</Filter>
+    </ClInclude>
+    <ClInclude Include="ReadChatDetour.hpp">
+      <Filter>CommonDetours</Filter>
+    </ClInclude>
+    <ClInclude Include="ChatCommandHandler.hpp">
+      <Filter>Util</Filter>
+    </ClInclude>
+    <ClInclude Include="Routines\HunterLeveling.hpp">
+      <Filter>Routines\Hunter</Filter>
+    </ClInclude>
+    <ClInclude Include="WowClientDB.hpp">
+      <Filter>WowStuff</Filter>
+    </ClInclude>
+    <ClInclude Include="Memory\AntiWarden.hpp">
+      <Filter>Memory</Filter>
+    </ClInclude>
+    <ClInclude Include="Util\Helpers.hpp">
+      <Filter>Util</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ClassDiagram.cd" />
+  </ItemGroup>
+</Project>
