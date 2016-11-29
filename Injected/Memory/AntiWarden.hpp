@@ -53,19 +53,15 @@ int WardenScanDetour(int buffer, int to_compare, int len)
 {
 	std::map<int, byte> old_bytes_map{};
 
-	for (auto& det : g_Detours)
-	{
+	for (auto& det : g_Detours)	
 		for (int i = 0; i != 6; ++i)		
 			old_bytes_map[(int)(det.second->target_func) + i] = *(det.second->original_bytes + i);
-	}
 	
-	for (int i = 0; i != len; ++i)
-	{		
+	for (int i = 0; i != len; ++i)	
 		if (old_bytes_map.find(to_compare + i) == old_bytes_map.end()) 
 			*(byte*)(buffer + i) = *(byte*)(to_compare + i);		
 		else 
 			//bypass MEM_CHECK for detoured functions
 			*(byte*)(buffer + i) = old_bytes_map[to_compare + i];
-	}
 	return 0;
 }
