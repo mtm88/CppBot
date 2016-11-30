@@ -20,7 +20,7 @@ int __stdcall NetClientProcessDetour(/*int connection, */int a2, CDataStore* dat
 	//---------------- return to the original function ----------------
 	auto det = g_Detours["NetClientProcess"];
 	det->Restore();
-	int res = ((int(__thiscall*)(int, int, CDataStore*, int))det->GetOrig())(connection, a2, data, a4);
+	int res = ((int(__thiscall*)(int, int, CDataStore*, int))det->target)(connection, a2, data, a4);
 	det->Apply();
 	return res;
 }

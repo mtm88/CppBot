@@ -44,7 +44,7 @@ int SMSG_WARDEN_DATA_HandlerDetour(int a1, uint16 opcode, int a3, int pDataStore
 	//---------------- return to the original function ----------------
 	auto det = g_Detours["WardenDataHandler"];
 	det->Restore();
-	int res = ((int(__cdecl*)(int, uint16, int, int))det->GetOrig())(a1, opcode, a3, pDataStore);
+	int res = ((int(__cdecl*)(int, uint16, int, int))det->target)(a1, opcode, a3, pDataStore);
 	det->Apply();
 	return res;
 }
@@ -55,7 +55,7 @@ int WardenScanDetour(int buffer, int to_compare, int len)
 
 	for (auto& det : g_Detours)	
 		for (int i = 0; i != 6; ++i)		
-			old_bytes_map[(int)(det.second->target_func) + i] = *(det.second->original_bytes + i);
+			old_bytes_map[(int)(det.second->target) + i] = *(det.second->original_bytes + i);
 	
 	for (int i = 0; i != len; ++i)	
 		if (old_bytes_map.find(to_compare + i) == old_bytes_map.end()) 

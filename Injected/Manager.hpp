@@ -106,7 +106,7 @@ int __stdcall EndSceneDetour(int device)
 	//-------- return to the original function (and remove injection if needed) --------
 	auto det = g_Detours["EndScene"];
 	det->Restore();
-	int res = ((int(__stdcall*)(int))det->GetOrig())(device);
+	int res = ((int(__stdcall*)(int))det->target)(device);
 	if (shouldRemoveEndSceneInjection)
 	{
 		chat("Removing EndScene injection");
@@ -137,7 +137,7 @@ int __stdcall ResetDetour(int device, int pp)
 	//---------------- return to the original function ----------------
 	auto det = g_Detours["Reset"];
 	det->Restore();
-	int res = ((int(__stdcall*)(int, int))det->GetOrig())(device, pp);
+	int res = ((int(__stdcall*)(int, int))det->target)(device, pp);
 	det->Apply();
 	return res;
 }

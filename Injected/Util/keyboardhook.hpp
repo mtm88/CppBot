@@ -43,7 +43,7 @@ bool __cdecl OnKeyUpDetour(int* key)
 	//---------------- return to the original function ----------------
 	auto det = g_Detours["OnKeyUp"];
 	det->Restore(); 
-	auto res = ((bool(__cdecl*)(int*))det->GetOrig())(key);
+	auto res = ((bool(__cdecl*)(int*))det->target)(key);
 	det->Apply();
 	return res;
 }

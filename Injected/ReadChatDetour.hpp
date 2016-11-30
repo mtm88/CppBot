@@ -23,7 +23,7 @@ int __stdcall ReadChatDetour(/*int instance,*/ int unk, int zero)
 	//---------------- return to the original function ----------------
 	auto det = g_Detours["ReadChat"];
 	det->Restore();
-	int res = ((int(__thiscall*)(int, int, int))det->GetOrig())(instance, unk, zero);
+	int res = ((int(__thiscall*)(int, int, int))det->target)(instance, unk, zero);
 	det->Apply();
 	return res;
 }
