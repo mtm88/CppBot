@@ -79,10 +79,31 @@ auto __cdecl LuaUnitInLos(int state)
 	return 1;
 }
 
+auto __cdecl LuaUnitGetDistance(int state)
+{
+	if (FramescriptIsString(state, 1))
+	{
+		char* unit = FramescriptToLstring(state, 1, 0);
+		int addr = GetPtrFromUnitId(unit);
+		if (addr && GetLocalPlayer())
+		{	
+				FrameScriptPushNumber(state, (double)(Object(addr).Distance()));
+		}
+		else
+			FrameScriptPushNil(state);
+	}
+	else
+		FrameScriptDisplayError(state, "Usage: UnitInLos(\"unit\")");
+
+	return 1;
+}
+
+
 auto luaCommandsRegistered{ false };
 auto LoadScriptFunctionsDetour()
 {
 	FramescriptRegister("UnitInLos", (int)LuaUnitInLos);
+	FramescriptRegister("UnitGetDistance", (int)LuaUnitGetDistance);
 	luaCommandsRegistered = true;
 
 	//---------------- return to the original function ----------------
@@ -116,8 +137,12 @@ DWORD MainThreadControl(LPVOID lpParm)
 	g_Detours["ReadChat"] = new Detour(0x00966580, (int)ReadChatDetour);	
 	g_Detours["LoadScriptFunctions"] = new Detour(0x005120E0, (int)LoadScriptFunctionsDetour);
 	
-	if(!luaCommandsRegistered && *(int*)0x00BD091C)
+	if (!luaCommandsRegistered && *(int*)0x00BD091C)
+	{
 		FramescriptRegister("UnitInLos", (int)LuaUnitInLos);
+		FramescriptRegister("UnitGetDistance", (int)LuaUnitGetDistance);
+
+	}
 
 	InitDBTables();
 
@@ -136,6 +161,7 @@ DWORD MainThreadControl(LPVOID lpParm)
 	// exit
 	UnregisterCommand("testcmd");
 	FramescriptUnregister("UnitInLos");
+	FramescriptUnregister("UnitGetDistance");
 
 	if (hKeyHook)	
 		UnhookWindowsHookEx(hKeyHook);
