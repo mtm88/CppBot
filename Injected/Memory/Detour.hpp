@@ -59,7 +59,7 @@ public:
 		DWORD old_protection_;
 		VirtualProtect(target, 6, PAGE_EXECUTE_READWRITE, &old_protection_);
 
-		*new_bytes = 0x68;  // push (address provided through hookFunc)
+		*new_bytes = 0x68;  // push (the address provided through hook)
 		*(int*)(new_bytes + 1) = hook;
 		new_bytes[5] = 0xc3;  // return
 		

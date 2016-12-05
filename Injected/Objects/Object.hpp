@@ -71,6 +71,8 @@ public:
 		if (!other)
 			return std::numeric_limits<float>::infinity();
 
+		//TODO consider the bounding raduis please
+
 		return other->Coords().DistanceTo(Coords());
 	}
 

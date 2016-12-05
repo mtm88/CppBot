@@ -57,6 +57,42 @@ bool CCommand_TestCommand(char const* cmd, char const* args)
 	return true;
 }
 
+auto __cdecl LuaUnitInLos(int state)
+{
+	if (FramescriptIsString(state, 1))
+	{
+		char* unit = FramescriptToLstring(state, 1, 0);
+		int addr = GetPtrFromUnitId(unit);
+		if (addr && GetLocalPlayer())
+		{
+			if (Object(addr).InLos())
+				FrameScriptPushNumber(state, 1);
+			else
+				FrameScriptPushNumber(state, 0);
+		}
+		else
+			FrameScriptPushNil(state);
+	}
+	else
+		FrameScriptDisplayError(state, "Usage: UnitInLos(\"unit\")");
+
+	return 1;
+}
+
+auto luaCommandsRegistered{ false };
+auto LoadScriptFunctionsDetour()
+{
+	FramescriptRegister("UnitInLos", (int)LuaUnitInLos);
+	luaCommandsRegistered = true;
+
+	//---------------- return to the original function ----------------
+	auto det = g_Detours["LoadScriptFunctions"];
+	det->Restore();
+	int res = ((int(__cdecl*)())det->target)();
+	det->Apply();
+	return res;
+}
+
 DWORD MainThreadControl(LPVOID lpParm)
 {	
 	g_Detours["WardenDataHandler"] = new Detour(0x007DA850, (int)SMSG_WARDEN_DATA_HandlerDetour);
@@ -78,11 +114,14 @@ DWORD MainThreadControl(LPVOID lpParm)
 	//g_Detours["OnKeyUp"] = new Detour(0x00763BE0, (int)OnKeyUpDetour);	
 	g_Detours["NetClientProcess"] = new Detour(0x00631FE0, (int)NetClientProcessDetour);
 	g_Detours["ReadChat"] = new Detour(0x00966580, (int)ReadChatDetour);	
+	g_Detours["LoadScriptFunctions"] = new Detour(0x005120E0, (int)LoadScriptFunctionsDetour);
+	
+	if(!luaCommandsRegistered && *(int*)0x00BD091C)
+		FramescriptRegister("UnitInLos", (int)LuaUnitInLos);
 
 	InitDBTables();
 
 	EnableWowConsole();
-
 	// Fix InvalidPtrCheck for callbacks outside of .text section
 	*(int*)0x00D415B8 = 1;
 	*(int*)0x00D415BC = 0x7FFFFFFF;
@@ -96,6 +135,7 @@ DWORD MainThreadControl(LPVOID lpParm)
 
 	// exit
 	UnregisterCommand("testcmd");
+	FramescriptUnregister("UnitInLos");
 
 	if (hKeyHook)	
 		UnhookWindowsHookEx(hKeyHook);
