@@ -93,8 +93,22 @@ auto __cdecl LuaUnitGetDistance(int state)
 			FrameScriptPushNil(state);
 	}
 	else
-		FrameScriptDisplayError(state, "Usage: UnitInLos(\"unit\")");
+		FrameScriptDisplayError(state, "Usage: UnitGetDistance(\"unit\")");
 
+	return 1;
+}
+
+auto __cdecl LuaFaceRanged(int state)
+{
+	if (FramescriptIsString(state, 1))
+	{
+		char* unit = FramescriptToLstring(state, 1, 0);
+		int addr = GetPtrFromUnitId(unit);
+		if (addr && GetLocalPlayer())
+		{
+			Object(addr).FaceRanged();
+		}
+	}
 	return 1;
 }
 
@@ -104,6 +118,7 @@ auto LoadScriptFunctionsDetour()
 {
 	FramescriptRegister("UnitInLos", (int)LuaUnitInLos);
 	FramescriptRegister("UnitGetDistance", (int)LuaUnitGetDistance);
+	FramescriptRegister("FaceRanged", (int)LuaFaceRanged);
 	luaCommandsRegistered = true;
 
 	//---------------- return to the original function ----------------
@@ -141,6 +156,8 @@ DWORD MainThreadControl(LPVOID lpParm)
 	{
 		FramescriptRegister("UnitInLos", (int)LuaUnitInLos);
 		FramescriptRegister("UnitGetDistance", (int)LuaUnitGetDistance);
+		FramescriptRegister("FaceRanged", (int)LuaFaceRanged);
+
 
 	}
 
@@ -162,6 +179,7 @@ DWORD MainThreadControl(LPVOID lpParm)
 	UnregisterCommand("testcmd");
 	FramescriptUnregister("UnitInLos");
 	FramescriptUnregister("UnitGetDistance");
+	FramescriptUnregister("FaceRanged");
 
 	if (hKeyHook)	
 		UnhookWindowsHookEx(hKeyHook);
