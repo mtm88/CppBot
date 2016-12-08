@@ -146,12 +146,16 @@ public:
 	}	
 
 	void InternalRender(float* target)
-	{				
+	{	
+		if (!GetActiveCamera())
+			return;
+
+		CameraInfo* cam = (CameraInfo*)GetActiveCamera();
+
 		D3DXMATRIX world, projection, view;
 		D3DXMatrixIdentity(&world);
-		D3DXMatrixTranslation(&world, target[0], target[1], target[2]);
+		D3DXMatrixTranslation(&world, target[0], target[1], target[2]);		
 		
-		CameraInfo* cam = (CameraInfo*)GetPointer();
 		D3DXMatrixPerspectiveFovRH(&projection, cam->FieldOfView * 0.6f, cam->Aspect, cam->NearPlane, cam->FarPlane);
 
 		Location eye = cam->Position;

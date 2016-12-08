@@ -109,6 +109,8 @@ auto __cdecl LuaFaceRanged(int state)
 			Object(addr).FaceRanged();
 		}
 	}
+	else
+		FrameScriptDisplayError(state, "Usage: UnitFaceRanged(\"unit\")");
 	return 1;
 }
 
@@ -118,11 +120,11 @@ auto LoadScriptFunctionsDetour()
 {
 	FramescriptRegister("UnitInLos", (int)LuaUnitInLos);
 	FramescriptRegister("UnitGetDistance", (int)LuaUnitGetDistance);
-	FramescriptRegister("FaceRanged", (int)LuaFaceRanged);
+	FramescriptRegister("UnitFaceRanged", (int)LuaFaceRanged);
 	luaCommandsRegistered = true;
 
 	//---------------- return to the original function ----------------
-	auto det = g_Detours["LoadScriptFunctions"];
+	auto det = g_memops["LoadScriptFunctions"];
 	det->Restore();
 	int res = ((int(__cdecl*)())det->target)();
 	det->Apply();
@@ -131,7 +133,7 @@ auto LoadScriptFunctionsDetour()
 
 DWORD MainThreadControl(LPVOID lpParm)
 {	
-	g_Detours["WardenDataHandler"] = new Detour(0x007DA850, (int)SMSG_WARDEN_DATA_HandlerDetour);
+	g_memops["WardenDataHandler"] = new Detour(0x007DA850, (int)SMSG_WARDEN_DATA_HandlerDetour);
 
 	WindowsConsole::Create();	
 	Sleep(200);
@@ -145,28 +147,29 @@ DWORD MainThreadControl(LPVOID lpParm)
 	printf("End Scene Pointer = %X\n", endScenePointer); 
 	printf("Reset Pointer = %X\n", resetPointer);
 
-	g_Detours["EndScene"] = new Detour(endScenePointer, (int)EndSceneDetour);
-	g_Detours["Reset"] = new Detour(resetPointer, (int)ResetDetour);
-	//g_Detours["OnKeyUp"] = new Detour(0x00763BE0, (int)OnKeyUpDetour);	
-	g_Detours["NetClientProcess"] = new Detour(0x00631FE0, (int)NetClientProcessDetour);
-	g_Detours["ReadChat"] = new Detour(0x00966580, (int)ReadChatDetour);	
-	g_Detours["LoadScriptFunctions"] = new Detour(0x005120E0, (int)LoadScriptFunctionsDetour);
+	// Fix InvalidPtrCheck for callbacks outside of .text section
+	*(int*)0x00D415B8 = 1;
+	*(int*)0x00D415BC = 0x7FFFFFFF;
+
+	g_memops["EndScene"] = new Detour(endScenePointer, (int)EndSceneDetour);
+	g_memops["Reset"] = new Detour(resetPointer, (int)ResetDetour);
+	//g_memops["OnKeyUp"] = new Detour(0x00763BE0, (int)OnKeyUpDetour);	
+	g_memops["NetClientProcess"] = new Detour(0x00631FE0, (int)NetClientProcessDetour);
+	g_memops["ReadChat"] = new Detour(0x00966580, (int)ReadChatDetour);	
+	g_memops["LoadScriptFunctions"] = new Detour(0x005120E0, (int)LoadScriptFunctionsDetour);
+
+	g_memops["UnlockLuaPatch"] = new Patch(0x0085C90B, { 0x5f, 0x5e, 0x5b, 0x8b, 0xe5, 0x5d, 0xc3 });
 	
 	if (!luaCommandsRegistered && *(int*)0x00BD091C)
 	{
 		FramescriptRegister("UnitInLos", (int)LuaUnitInLos);
 		FramescriptRegister("UnitGetDistance", (int)LuaUnitGetDistance);
-		FramescriptRegister("FaceRanged", (int)LuaFaceRanged);
-
-
+		FramescriptRegister("UnitFaceRanged", (int)LuaFaceRanged);
 	}
 
 	InitDBTables();
 
-	EnableWowConsole();
-	// Fix InvalidPtrCheck for callbacks outside of .text section
-	*(int*)0x00D415B8 = 1;
-	*(int*)0x00D415BC = 0x7FFFFFFF;
+	EnableWowConsole();	
 	ConsoleWrite("test", DEFAULT_COLOR);	
 	RegisterCommand("testcmd", CCommand_TestCommand, CATEGORY_DEBUG, "Test help string");
 	//ShowConsole();	
@@ -179,7 +182,7 @@ DWORD MainThreadControl(LPVOID lpParm)
 	UnregisterCommand("testcmd");
 	FramescriptUnregister("UnitInLos");
 	FramescriptUnregister("UnitGetDistance");
-	FramescriptUnregister("FaceRanged");
+	FramescriptUnregister("UnitFaceRanged");
 
 	if (hKeyHook)	
 		UnhookWindowsHookEx(hKeyHook);
@@ -193,11 +196,11 @@ DWORD MainThreadControl(LPVOID lpParm)
 	while (!endSceneUnhooked) { }
 
 	// unhooks all detours we created
-	for (auto& det : g_Detours)
+	for (auto& det : g_memops)
 	{
 		delete det.second;
 	}
-	g_Detours.clear();
+	g_memops.clear();
 	// shutdowns the bot
 	// note: after that DLL's entry point will be called with reason DLL_PROCESS_DETACH
 	FreeLibraryAndExitThread((HMODULE)instanceDLL, 0);
@@ -286,7 +289,7 @@ void GetDevicePointers()
 //			((void(__cdecl*)(const char*, const char*, void*))0x00819210)("print('aaaaaaaaaaa')", "LetsDance", nullptr);
 //		}
 //	}
-//	auto det = g_Detours["EndScene"];
+//	auto det = g_memops["EndScene"];
 //	det->Restore();
 //	int res = ((int(__stdcall*)(int))det->GetOrig())(device);
 //	det->Apply();

@@ -32,17 +32,17 @@ int SMSG_WARDEN_DATA_HandlerDetour(int a1, uint16 opcode, int a3, int pDataStore
 				VirtualProtect((void*)(wardenModule + 0x12AD), 1, 0x40, &oldPFlags);
 				*(byte*)(wardenModule + 0x12AD) = 0;
 
-				auto det = g_Detours["WardenScanDetour"];
+				auto det = g_memops["WardenScanDetour"];
 				if (det != nullptr)
 					delete det;
 
-				g_Detours["WardenScanDetour"] = new Detour((wardenModule + 0x2A7F), (int)WardenScanDetour);
+				g_memops["WardenScanDetour"] = new Detour((wardenModule + 0x2A7F), (int)WardenScanDetour);
 			}
 		}
 	}
 
 	//---------------- return to the original function ----------------
-	auto det = g_Detours["WardenDataHandler"];
+	auto det = g_memops["WardenDataHandler"];
 	det->Restore();
 	int res = ((int(__cdecl*)(int, uint16, int, int))det->target)(a1, opcode, a3, pDataStore);
 	det->Apply();
@@ -53,9 +53,12 @@ int WardenScanDetour(int buffer, int to_compare, int len)
 {
 	std::map<int, byte> old_bytes_map{};
 
-	for (auto& det : g_Detours)	
-		for (int i = 0; i != 6; ++i)		
-			old_bytes_map[(int)(det.second->target) + i] = *(det.second->original_bytes + i);
+	for (auto& mem_op : g_memops)
+	{
+		auto memop = mem_op.second;
+		for (int i = 0; i != memop->original_bytes.size(); ++i)
+			old_bytes_map[(int)(memop->target) + i] = memop->original_bytes[i];
+	}
 	
 	for (int i = 0; i != len; ++i)	
 		if (old_bytes_map.find(to_compare + i) == old_bytes_map.end()) 

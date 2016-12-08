@@ -135,6 +135,12 @@
     <ClInclude Include="Util\Helpers.hpp">
       <Filter>Util</Filter>
     </ClInclude>
+    <ClInclude Include="Memory\Patch.hpp">
+      <Filter>Memory</Filter>
+    </ClInclude>
+    <ClInclude Include="Memory\MemoryOperation.hpp">
+      <Filter>Memory</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="ClassDiagram.cd" />

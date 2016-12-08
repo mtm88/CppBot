@@ -4,6 +4,7 @@
 #include <d3d9.h>
 #include "..\Microsoft DirectX SDK2010\Include\d3dx9core.h"
 #include "Memory\Detour.hpp"
+#include "Memory\Patch.hpp"
 #include "Util\Timer.hpp"
 #include "Util\Helpers.hpp"
 #include "Lua\Lua.hpp"
@@ -14,7 +15,7 @@
 
 bool shouldRemoveEndSceneInjection = false;
 bool endSceneUnhooked = false;
-std::map<std::string, Detour*> g_Detours;
+std::map<std::string, MemoryOperation*> g_memops;
 bool should_exit = false;
 bool do_something = false;
 
@@ -99,20 +100,20 @@ int __stdcall EndSceneDetour(int device)
 		
 	}
 
-	Common();
+	//Common();
 
 	frameCount++;
 
 	//-------- return to the original function (and remove injection if needed) --------
-	auto det = g_Detours["EndScene"];
+	auto det = g_memops["EndScene"];
 	det->Restore();
 	int res = ((int(__stdcall*)(int))det->target)(device);
 	if (shouldRemoveEndSceneInjection)
 	{
 		chat("Removing EndScene injection");
-		auto it = g_Detours.find("EndScene");
+		auto it = g_memops.find("EndScene");
 		delete it->second;
-		g_Detours.erase(it);
+		g_memops.erase(it);
 
 		if (graph != nullptr)
 			delete graph;
@@ -135,7 +136,7 @@ int __stdcall ResetDetour(int device, int pp)
 		graph->ReleaseFont();
 
 	//---------------- return to the original function ----------------
-	auto det = g_Detours["Reset"];
+	auto det = g_memops["Reset"];
 	det->Restore();
 	int res = ((int(__stdcall*)(int, int))det->target)(device, pp);
 	det->Apply();

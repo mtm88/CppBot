@@ -27,6 +27,8 @@
     <ClInclude Include="Lua\Lua.hpp" />
     <ClInclude Include="Memory\AntiWarden.hpp" />
     <ClInclude Include="Memory\Detour.hpp" />
+    <ClInclude Include="Memory\MemoryOperation.hpp" />
+    <ClInclude Include="Memory\Patch.hpp" />
     <ClInclude Include="NetClientProcessDetour.hpp" />
     <ClInclude Include="Objects\Aura.hpp" />
     <ClInclude Include="Objects\Container.hpp" />

@@ -1,13 +1,9 @@
 #pragma once
 #include "ChatCommandHandler.hpp"
 
-int __stdcall ReadChatDetour(/*int instance,*/ int unk, int zero)
+//it's a a thiscall
+int __fastcall ReadChatDetour(int instance, int EDX_Dummy, int unk, int zero)
 {
-	//because the func is __thiscall, just patching for now
-	int instance;
-	_asm mov instance, ecx;
-	//-----------------------------------------------------
-
 	if (unk != 0)
 	{
 		int ptr = *(int*)(instance + 0x2B4);
@@ -21,7 +17,7 @@ int __stdcall ReadChatDetour(/*int instance,*/ int unk, int zero)
 	}
 
 	//---------------- return to the original function ----------------
-	auto det = g_Detours["ReadChat"];
+	auto det = g_memops["ReadChat"];
 	det->Restore();
 	int res = ((int(__thiscall*)(int, int, int))det->target)(instance, unk, zero);
 	det->Apply();
