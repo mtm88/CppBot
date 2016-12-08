@@ -8,7 +8,6 @@ class MemoryOperation
 public:	
 	std::vector<byte> original_bytes{};
 	std::vector<byte> new_bytes{};
-	bool is_applied{};
 	byte* target{};
 
 	MemoryOperation(byte* target_arg) :target{ target_arg } {}

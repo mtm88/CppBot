@@ -37,7 +37,7 @@ Location Forward()
 {
 	Location res{};
 
-	if (GetActiveCamera)
+	if (GetActiveCamera())
 	{
 		int funcaddr = GetVirtualFuncAddr(GetActiveCamera(), 1);
 		((Location*(__thiscall*)(int, Location*))(funcaddr))(GetActiveCamera(), &res);

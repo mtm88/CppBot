@@ -165,6 +165,7 @@ DWORD MainThreadControl(LPVOID lpParm)
 		FramescriptRegister("UnitInLos", (int)LuaUnitInLos);
 		FramescriptRegister("UnitGetDistance", (int)LuaUnitGetDistance);
 		FramescriptRegister("UnitFaceRanged", (int)LuaFaceRanged);
+
 	}
 
 	InitDBTables();
