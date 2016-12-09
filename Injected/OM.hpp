@@ -6,7 +6,7 @@
 #include "Objects\Corpse.hpp"
 #include "Objects\DynamicObject.hpp"
 
-#include "Manager.hpp"
+#include "EndSceneHandler.hpp"
 
 std::vector<GameObject*> gameobjects;
 std::vector<Item*> items;

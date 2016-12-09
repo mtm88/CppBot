@@ -1,6 +1,6 @@
 #pragma once
 #include "WowStuff\Opcodes.h"
-#include "DataStore.hpp"
+#include "..\WowStuff\DataStore.hpp"
 
 //it's a a thiscall
 int __fastcall NetClientProcessDetour(int connection, int EDX_Dummy, int a2, CDataStore* data, int a4)

@@ -9,10 +9,10 @@
 #include "Util\WindowsConsole.hpp"
 #include "Util\KeyboardHook.hpp"
 #include "WowStuff\WowConsole.hpp"
-#include "Manager.hpp"
-#include "NetClientProcessDetour.hpp"
-#include "ReadChatDetour.hpp"
-#include "WowClientDB.hpp"
+#include "EndsceneHandler.hpp"
+#include "WowStuff\WowClientDB.hpp"
+#include "CommonDetours\ReadChatDetour.hpp"
+#include "CommonDetours\NetClientProcessDetour.hpp"
 #include "Memory\AntiWarden.hpp"
 
 HINSTANCE instanceDLL = nullptr;
@@ -51,85 +51,11 @@ void WINAPI MessageLoop(LPVOID lpParm)
 	GetMessage(&message, NULL, 0, 0);	
 }
 
-bool CCommand_TestCommand(char const* cmd, char const* args)
-{
-	ConsoleWriteA("Hello from TestCommand: cmd '%s', args '%s'", INPUT_COLOR, cmd, args);
-	return true;
-}
-
-auto __cdecl LuaUnitInLos(int state)
-{
-	if (FramescriptIsString(state, 1))
-	{
-		char* unit = FramescriptToLstring(state, 1, 0);
-		int addr = GetPtrFromUnitId(unit);
-		if (addr && GetLocalPlayer())
-		{
-			if (Object(addr).InLos())
-				FrameScriptPushNumber(state, 1);
-			else
-				FrameScriptPushNumber(state, 0);
-		}
-		else
-			FrameScriptPushNil(state);
-	}
-	else
-		FrameScriptDisplayError(state, "Usage: UnitInLos(\"unit\")");
-
-	return 1;
-}
-
-auto __cdecl LuaUnitGetDistance(int state)
-{
-	if (FramescriptIsString(state, 1))
-	{
-		char* unit = FramescriptToLstring(state, 1, 0);
-		int addr = GetPtrFromUnitId(unit);
-		if (addr && GetLocalPlayer())
-		{	
-				FrameScriptPushNumber(state, (double)(Object(addr).Distance()));
-		}
-		else
-			FrameScriptPushNil(state);
-	}
-	else
-		FrameScriptDisplayError(state, "Usage: UnitGetDistance(\"unit\")");
-
-	return 1;
-}
-
-auto __cdecl LuaFaceRanged(int state)
-{
-	if (FramescriptIsString(state, 1))
-	{
-		char* unit = FramescriptToLstring(state, 1, 0);
-		int addr = GetPtrFromUnitId(unit);
-		if (addr && GetLocalPlayer())
-		{
-			Object(addr).FaceRanged();
-		}
-	}
-	else
-		FrameScriptDisplayError(state, "Usage: UnitFaceRanged(\"unit\")");
-	return 1;
-}
-
-
-auto luaCommandsRegistered{ false };
-auto LoadScriptFunctionsDetour()
-{
-	FramescriptRegister("UnitInLos", (int)LuaUnitInLos);
-	FramescriptRegister("UnitGetDistance", (int)LuaUnitGetDistance);
-	FramescriptRegister("UnitFaceRanged", (int)LuaFaceRanged);
-	luaCommandsRegistered = true;
-
-	//---------------- return to the original function ----------------
-	auto det = g_memops["LoadScriptFunctions"];
-	det->Restore();
-	int res = ((int(__cdecl*)())det->target)();
-	det->Apply();
-	return res;
-}
+//bool CCommand_TestCommand(char const* cmd, char const* args)
+//{
+//	ConsoleWriteA("Hello from TestCommand: cmd '%s', args '%s'", INPUT_COLOR, cmd, args);
+//	return true;
+//}
 
 DWORD MainThreadControl(LPVOID lpParm)
 {	
@@ -156,23 +82,12 @@ DWORD MainThreadControl(LPVOID lpParm)
 	//g_memops["OnKeyUp"] = new Detour(0x00763BE0, (int)OnKeyUpDetour);	
 	g_memops["NetClientProcess"] = new Detour(0x00631FE0, (int)NetClientProcessDetour);
 	g_memops["ReadChat"] = new Detour(0x00966580, (int)ReadChatDetour);	
-	g_memops["LoadScriptFunctions"] = new Detour(0x005120E0, (int)LoadScriptFunctionsDetour);
-
-	g_memops["UnlockLuaPatch"] = new Patch(0x0085C90B, { 0x5f, 0x5e, 0x5b, 0x8b, 0xe5, 0x5d, 0xc3 });
-	
-	if (!luaCommandsRegistered && *(int*)0x00BD091C)
-	{
-		FramescriptRegister("UnitInLos", (int)LuaUnitInLos);
-		FramescriptRegister("UnitGetDistance", (int)LuaUnitGetDistance);
-		FramescriptRegister("UnitFaceRanged", (int)LuaFaceRanged);
-
-	}
 
 	InitDBTables();
 
-	EnableWowConsole();	
+	/*EnableWowConsole();	
 	ConsoleWrite("test", DEFAULT_COLOR);	
-	RegisterCommand("testcmd", CCommand_TestCommand, CATEGORY_DEBUG, "Test help string");
+	RegisterCommand("testcmd", CCommand_TestCommand, CATEGORY_DEBUG, "Test help string");*/
 	//ShowConsole();	
 
 	//-----------------------------------  loop here before exit ----------------------------------

@@ -34,7 +34,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="OM.hpp" />
-    <ClInclude Include="Manager.hpp" />
     <ClInclude Include="Graphics.hpp" />
     <ClInclude Include="Objects\Aura.hpp">
       <Filter>Objects</Filter>
@@ -111,18 +110,6 @@
     <ClInclude Include="WowStuff\Opcodes.h">
       <Filter>WowStuff</Filter>
     </ClInclude>
-    <ClInclude Include="DataStore.hpp">
-      <Filter>WowStuff</Filter>
-    </ClInclude>
-    <ClInclude Include="NetClientProcessDetour.hpp">
-      <Filter>CommonDetours</Filter>
-    </ClInclude>
-    <ClInclude Include="ReadChatDetour.hpp">
-      <Filter>CommonDetours</Filter>
-    </ClInclude>
-    <ClInclude Include="ChatCommandHandler.hpp">
-      <Filter>Util</Filter>
-    </ClInclude>
     <ClInclude Include="Routines\HunterLeveling.hpp">
       <Filter>Routines\Hunter</Filter>
     </ClInclude>
@@ -141,6 +128,20 @@
     <ClInclude Include="Memory\MemoryOperation.hpp">
       <Filter>Memory</Filter>
     </ClInclude>
+    <ClInclude Include="EndsceneHandler.hpp" />
+    <ClInclude Include="Lua\CommandHandler.hpp">
+      <Filter>Lua</Filter>
+    </ClInclude>
+    <ClInclude Include="CommonDetours\NetClientProcessDetour.hpp">
+      <Filter>CommonDetours</Filter>
+    </ClInclude>
+    <ClInclude Include="CommonDetours\ReadChatDetour.hpp">
+      <Filter>CommonDetours</Filter>
+    </ClInclude>
+    <ClInclude Include="WowStuff\DataStore.hpp">
+      <Filter>WowStuff</Filter>
+    </ClInclude>
+    <ClInclude Include="ChatCommandHandler.hpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="ClassDiagram.cd" />

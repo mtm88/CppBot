@@ -13,11 +13,11 @@
 #include "Routines\PaladinLeveling.hpp"
 #include "Graphics.hpp"
 
-bool shouldRemoveEndSceneInjection = false;
-bool endSceneUnhooked = false;
-std::map<std::string, MemoryOperation*> g_memops;
-bool should_exit = false;
-bool do_something = false;
+bool shouldRemoveEndSceneInjection{};
+bool endSceneUnhooked{};
+std::map<std::string, MemoryOperation*> g_memops{};
+bool should_exit{};
+bool do_something{};
 
 int frameCount = 0;
 Graphics* graph = nullptr;
@@ -89,8 +89,8 @@ int __stdcall EndSceneDetour(int device)
 
 		auto sp = Spell("Chimera Shot");
 
-		mrint("IsAutoshooting", BoolToString(me->IsAutoshootingH()));
-		mrint("GetAutoshooting", std::to_string(me->GetAutoshootingH()));
+		/*mrint("IsAutoshooting", BoolToString(me->IsAutoshootingH()));
+		mrint("GetAutoshooting", std::to_string(me->GetAutoshootingH()));*/
 
 		if (target)
 		{
@@ -100,7 +100,7 @@ int __stdcall EndSceneDetour(int device)
 		
 	}
 
-	//Common();
+	Common();
 
 	frameCount++;
 

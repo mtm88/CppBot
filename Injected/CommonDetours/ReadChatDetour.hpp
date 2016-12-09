@@ -1,5 +1,5 @@
 #pragma once
-#include "ChatCommandHandler.hpp"
+#include "..\ChatCommandHandler.hpp"
 
 //it's a a thiscall
 int __fastcall ReadChatDetour(int instance, int EDX_Dummy, int unk, int zero)

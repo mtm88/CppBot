@@ -1,7 +1,7 @@
 #pragma once
 
 #include "..\WowStuff\WowFuncs.hpp"
-#include "..\WowClientDB.hpp"
+#include "..\WowStuff\WowClientDB.hpp"
 
 std::map<int, timer> casted;
 std::vector<int> known_spells;

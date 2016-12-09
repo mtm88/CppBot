@@ -1,11 +1,9 @@
 #pragma once
 #include "Helpers.hpp"
-#include "..\Manager.hpp"
-
+#include "..\EndsceneHandler.hpp"
 #include <Windows.h>
 
 HHOOK hKeyHook = nullptr;
-
 
 LRESULT CALLBACK KeyboardHook(int nCode, WPARAM wParam, LPARAM lParam)
 {

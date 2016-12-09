@@ -23,13 +23,14 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ChatCommandHandler.hpp" />
-    <ClInclude Include="DataStore.hpp" />
+    <ClInclude Include="CommonDetours\NetClientProcessDetour.hpp" />
+    <ClInclude Include="CommonDetours\ReadChatDetour.hpp" />
+    <ClInclude Include="Lua\CommandHandler.hpp" />
     <ClInclude Include="Lua\Lua.hpp" />
     <ClInclude Include="Memory\AntiWarden.hpp" />
     <ClInclude Include="Memory\Detour.hpp" />
     <ClInclude Include="Memory\MemoryOperation.hpp" />
     <ClInclude Include="Memory\Patch.hpp" />
-    <ClInclude Include="NetClientProcessDetour.hpp" />
     <ClInclude Include="Objects\Aura.hpp" />
     <ClInclude Include="Objects\Container.hpp" />
     <ClInclude Include="Objects\Corpse.hpp" />
@@ -41,12 +42,11 @@
     <ClInclude Include="Objects\Player.hpp" />
     <ClInclude Include="Objects\Spell.hpp" />
     <ClInclude Include="Objects\Unit.hpp" />
-    <ClInclude Include="ReadChatDetour.hpp" />
     <ClInclude Include="Routines\Common.hpp" />
     <ClInclude Include="Routines\HunterLeveling.hpp" />
     <ClInclude Include="Routines\PaladinLeveling.hpp" />
     <ClInclude Include="Graphics.hpp" />
-    <ClInclude Include="Manager.hpp" />
+    <ClInclude Include="EndsceneHandler.hpp" />
     <ClInclude Include="OM.hpp" />
     <ClInclude Include="Util\Helpers.hpp" />
     <ClInclude Include="Util\Keyboardhook.hpp" />
@@ -54,6 +54,7 @@
     <ClInclude Include="Util\WindowsConsole.hpp" />
     <ClInclude Include="WowClientDB.hpp" />
     <ClInclude Include="WowStuff\Camera.hpp" />
+    <ClInclude Include="WowStuff\DataStore.hpp" />
     <ClInclude Include="WowStuff\Location.hpp" />
     <ClInclude Include="WowStuff\Opcodes.h" />
     <ClInclude Include="WowStuff\SharedDefines.h" />
